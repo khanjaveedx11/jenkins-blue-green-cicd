@@ -10,14 +10,18 @@ pipeline {
 
         stage('Docker Build Check') {
             steps {
-                sh 'docker build -t blue-green-app:test .'
+                dir('Javeed-Blue-Green-CICD-Simplified') {
+                    sh 'docker build -t blue-green-app:test .'
+                }
             }
         }
 
         stage('Deploy Blue/Green') {
             steps {
-                sh 'chmod +x deploy.sh rollback.sh'
-                sh './deploy.sh'
+                dir('Javeed-Blue-Green-CICD-Simplified') {
+                    sh 'chmod +x deploy.sh rollback.sh'
+                    sh './deploy.sh'
+                }
             }
         }
     }
@@ -26,6 +30,7 @@ pipeline {
         success {
             echo 'Blue-Green deployment completed successfully.'
         }
+
         failure {
             echo 'Deployment failed. Current production traffic was not switched.'
         }
